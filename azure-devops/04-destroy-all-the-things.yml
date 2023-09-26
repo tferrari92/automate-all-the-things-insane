@@ -72,7 +72,7 @@ jobs:
     inputs:
       terraformVersion: '1.4.6'
 
-  - task: TerraformCLI@0
+  - task: TerraformCLI@1
     displayName: 'Terraform Init'
     inputs:
       command: init
@@ -82,7 +82,7 @@ jobs:
       providerServiceAws: 'aws'
       providerAwsRegion: $(AWS_REGION)
 
-  - task: TerraformCLI@0
+  - task: TerraformCLI@1
     displayName: 'Terraform Destroy AWS Infra'
     inputs:
       command: destroy
