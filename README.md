@@ -461,7 +461,7 @@ For the infrastructure, same as before. If the infrastrucure team needs to, for 
 3. Select "GitHub".
 4. Select the repo, it should be "your-github-username/automate-all-the-things-insane"
 5. Select "Existing Azure Pipelines YAML file".
-6. Under "Branch" select "main" and under "Path" select "/azure-devops/01-build-and-deploy-frontend.yml". Click "Continue".
+6. Under "Branch" select "main" and under "Path" select "/azure-devops/02-build-and-deploy-frontend.yml". Click "Continue".
 7. If you DON'T have a hosted parallelism, you'll need to do the same thing as in point 10 from the [infrastructure deployment pipeline](#instructions).
 8. Click on "Run".
 
