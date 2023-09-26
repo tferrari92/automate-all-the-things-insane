@@ -67,7 +67,7 @@ jobs:
   displayName: 'Delete AWS Infrastructure'
   dependsOn: DeleteK8SResources
   steps:
-  - task: TerraformInstaller@0
+  - task: TerraformInstaller@1
     displayName: Install terraform
     inputs:
       terraformVersion: '1.4.6'
