@@ -59,13 +59,13 @@ This Insane Edition builds upon the [Hardcore Edition](https://github.com/tferra
 - [AWS Infrastructure Deployment Pipeline](#aws-infrastructure-deployment-pipeline)
   - [Description](#description)
   - [Instructions](#instructions)
-- [ArgoCD Deployment Pipeline](#argocd-deployment-pipeline)
+- [Backend Service Build & Deploy Pipeline](#backend-service-build--deploy-pipeline)
   - [Description](#description-1)
   - [Instructions](#instructions-1)
-- [Backend Service Build & Deploy Pipeline](#backend-service-build--deploy-pipeline)
+- [Frontend Service Build & Deploy Pipeline](#frontend-service-build--deploy-pipeline)
   - [Description](#description-2)
   - [Instructions](#instructions-2)
-- [Frontend Service Build & Deploy Pipeline](#frontend-service-build--deploy-pipeline)
+- [ArgoCD Deployment Pipeline](#argocd-deployment-pipeline)
   - [Description](#description-3)
   - [Instructions](#instructions-3)
 - [Kubernetes Tools Management](#kubernetes-tools-management)
@@ -385,54 +385,11 @@ pool:
 <br/>
 <br/>
 
-# ARGOCD DEPLOYMENT PIPELINE
-
-## Description
-
-We won't go into what ArgoCD is, for that you have [this video](https://youtu.be/MeU5_k9ssrs) by the #1 DevOps youtuber, Nana from [TechWorld with Nana](https://www.youtube.com/@TechWorldwithNana).
-
-This pipeline will use the [ArgoCD Helm Chart](helm/argo-cd/) in our repo to deploy ArgoCD into our EKS.<br>
-The first thing it will do is run the necessary tasks to connect to our the cluster. After this, ArgoCD will be installed, along with it's Ingress.
-
-It will then create the necessary resources for ArgoCD to be self-managed and to apply the [App of Apps pattern](https://youtu.be/2pvGL0zqf9o). ArgoCD will be watching the helm charts in the [helm](helm) directory in our repo, it will automatically create all the resources it finds and apply any future changes me make there. The [helm/infra](helm/my-app) and [helm/my-app](helm/my-app) directories simulates what would be our K8S infrastructure repositories would be.
-
-If you want to know more about Helm, [here's another Nana video](https://youtu.be/-ykwb1d0DXU).
-
-Following up, it will get the Istio Gateway endpoint and put it into the [frontend values file](helm/my-app/frontend/values.yaml). It will also export the endpoint for each environment as an artifact.
-
-Finally the pipeline will get the ArgoCD web UI URL and admin account password and export them as an artifact too. You might need to wait a few seconds for the URL to be active, this is because an AWS Load Balancer takes a little time to be deployed.
-
-<br/>
-
-## Instructions
-
-1. Go to "Pipelines" under "Pipelines" on the left side menu.
-2. Click on "New pipeline".
-3. Select "GitHub".
-4. Select the repo, it should be "your-github-username/automate-all-the-things-insane"
-5. Select "Existing Azure Pipelines YAML file".
-6. Under "Branch" select "main" and under "Path" select "/azure-devops/01-deploy-argocd.yml". Click "Continue".
-7. If you DON'T have a hosted parallelism, you'll need to do the same thing as in point 10 from the [infrastructure deployment pipeline](#instructions).
-8. Click on "Run".
-9. When it's done, the endpoints and ArgoCD access files will be exported as artifacts. You'll find them in the pipeline run screen. Download them to see the ArgoCD URL and credentials, and the frontend endpoints.
-<p title="Guide" align="center"> <img width="700" src="https://i.imgur.com/UtZyCCe.png"> </p>
-
-10. You can now access the ArgoCD UI, if it's not ready just hit refresh every few seconds. Here you should find all the applications. Three will be under the "argocd" project, these are necessary for ArgoCD self-management.<br>
-You will also see a few other applications related to our new service mesh implementation, they will be under the "service-mesh" project. We'll explore these later.<br>
-Another six applications will be under the "my-app" project. These manage our app's backend and frontend in the three environments. These will be in a "Progressing/Degraded" state. This is because we haven't built our app and pushed it to DockerHub yet, we'll take care of that soon. From the other exported artifact, you'll get the URLs for each enviroment's frontend, but don't expect these to work until we have deployed our app.  
-
-
-<br/>
-<br/>
-<p title="Gitops Chills" align="center"> <img width="460" src="https://i.imgur.com/kGQUUTw.jpg"> </p>
-<br/>
-<br/>
-
 # BACKEND SERVICE BUILD & DEPLOY PIPELINE
 
 ## Description
 
-Time to actually start the deployment of our app.
+Yes! You're right, we flipped the order of our pipelines in this edition. This is because we are now using Istio and Flagger. We need the backend and frontend images to be available in the DockerHub registry before deploying their applications. If they don't exist, the canary resources will not deploy properly. Don't worry about it, just carry on with the guide. 
 
 Our app is made of two microservices (backend and frontend) and a database. Let's start with the backend (which also includes the db).
 
@@ -466,7 +423,7 @@ Now, if the infrastrucure team needs to make changes to the cluster resources, t
 3. Select "GitHub".
 4. Select the repo, it should be "your-github-username/automate-all-the-things-insane"
 5. Select "Existing Azure Pipelines YAML file".
-6. Under "Branch" select "main" and under "Path" select "/azure-devops/02-build-and-deploy-backend.yml". Click "Continue".
+6. Under "Branch" select "main" and under "Path" select "/azure-devops/01-build-and-deploy-backend.yml". Click "Continue".
 7. If you DON'T have a hosted parallelism, you'll need to do the same thing as in point 10 from the [infrastructure deployment pipeline](#instructions).
 8. Click on "Run".
 
@@ -479,8 +436,6 @@ Now, if the infrastrucure team needs to make changes to the cluster resources, t
 # FRONTEND SERVICE BUILD & DEPLOY PIPELINE
 
 ## Description
-
-We are almost there! In this pipeline we will build and deploy our frontend.
 
 The [/my-app/frontend directory](my-app) on the repo is meant to represent the frontend microservice code repository. Here you'll find the code files and the corresponding Dockerfile for the frontend service.
 
@@ -506,17 +461,60 @@ For the infrastructure, same as before. If the infrastrucure team needs to, for 
 3. Select "GitHub".
 4. Select the repo, it should be "your-github-username/automate-all-the-things-insane"
 5. Select "Existing Azure Pipelines YAML file".
-6. Under "Branch" select "main" and under "Path" select "/azure-devops/03-build-and-deploy-frontend.yml". Click "Continue".
+6. Under "Branch" select "main" and under "Path" select "/azure-devops/01-build-and-deploy-frontend.yml". Click "Continue".
 7. If you DON'T have a hosted parallelism, you'll need to do the same thing as in point 10 from the [infrastructure deployment pipeline](#instructions).
 8. Click on "Run".
-9. When it's done, you should be able to access the URLs you got from the ArgoCD Deployment pipeline. But if you go to the URLs too quickly you'll see nothing there. We need to give ArgoCD a little time to notice the changes in the [/helm/my-app/frontend directory](helm/my-app/frontend). By default ArgoCD pulls for changes every three minutes. You can either wait like an adult or go into the ArgoCD web UI and hit "Refresh Apps" like the impatient child that you are.
+
+<!-- 9. When it's done, you should be able to access the URLs you got from the ArgoCD Deployment pipeline. But if you go to the URLs too quickly you'll see nothing there. We need to give ArgoCD a little time to notice the changes in the [/helm/my-app/frontend directory](helm/my-app/frontend). By default ArgoCD pulls for changes every three minutes. You can either wait like an adult or go into the ArgoCD web UI and hit "Refresh Apps" like the impatient child that you are.
 11. Check the URLs again.
 12. On the top left of the website you'll see the "Visit count". This number is being stored in the ElatiCache DB and accessed through the backend.
-13. Hope you like the web I made for you. If you did, go leave a star on [my repo](https://github.com/tferrari92/automate-all-the-things-insane).
+13. Hope you like the web I made for you. If you did, go leave a star on [my repo](https://github.com/tferrari92/automate-all-the-things-insane). -->
 
 <br/>
 <br/>
 <p title="Anakin" align="center"> <img width="460" src="https://i.imgur.com/V1qgXKM.jpg"> </p>
+<br/>
+<br/>
+
+# ARGOCD DEPLOYMENT PIPELINE
+
+## Description
+
+We won't go into what ArgoCD is, for that you have [this video](https://youtu.be/MeU5_k9ssrs) by the #1 DevOps youtuber, Nana from [TechWorld with Nana](https://www.youtube.com/@TechWorldwithNana).
+
+This pipeline will use the [ArgoCD Helm Chart](helm/argo-cd/) in our repo to deploy ArgoCD into our EKS.<br>
+The first thing it will do is run the necessary tasks to connect to our the cluster. After this, ArgoCD will be installed, along with it's Ingress.
+
+It will then create the necessary resources for ArgoCD to be self-managed and to apply the [App of Apps pattern](https://youtu.be/2pvGL0zqf9o). ArgoCD will be watching the helm charts in the [helm](helm) directory in our repo, it will automatically create all the resources it finds and apply any future changes me make there. The [helm/infra](helm/my-app) and [helm/my-app](helm/my-app) directories simulates what would be our K8S infrastructure repositories would be.
+
+If you want to know more about Helm, [here's another Nana video](https://youtu.be/-ykwb1d0DXU).
+
+Following up, it will get the Istio Gateway endpoint and put it into the [frontend values file](helm/my-app/frontend/values.yaml). It will also export the endpoint for each environment as an artifact.
+
+Finally the pipeline will get the ArgoCD web UI URL and admin account password and export them as an artifact too. You might need to wait a few seconds for the URL to be active, this is because an AWS Load Balancer takes a little time to be deployed.
+
+<br/>
+
+## Instructions
+
+1. Go to "Pipelines" under "Pipelines" on the left side menu.
+2. Click on "New pipeline".
+3. Select "GitHub".
+4. Select the repo, it should be "your-github-username/automate-all-the-things-insane"
+5. Select "Existing Azure Pipelines YAML file".
+6. Under "Branch" select "main" and under "Path" select "/azure-devops/03-deploy-argocd.yml". Click "Continue".
+7. If you DON'T have a hosted parallelism, you'll need to do the same thing as in point 10 from the [infrastructure deployment pipeline](#instructions).
+8. Click on "Run".
+9. When it's done, the endpoints and ArgoCD access files will be exported as artifacts. You'll find them in the pipeline run screen. Download them to see the ArgoCD URL and credentials, and the frontend endpoints.
+<p title="Guide" align="center"> <img width="700" src="https://i.imgur.com/UtZyCCe.png"> </p>
+
+10. You can now access the ArgoCD UI, if it's not ready just hit refresh every few seconds. Here you should find all the applications. Three will be under the "argocd" project, these are necessary for ArgoCD self-management.<br>
+You will also see a few other applications related to our new service mesh implementation, they will be under the "service-mesh" project. We'll explore these later.<br>
+Another six applications will be under the "my-app" project. These manage our app's backend and frontend in the three environments. These will be in a "Progressing/Degraded" state. This is because we haven't built our app and pushed it to DockerHub yet, we'll take care of that soon. From the other exported artifact, you'll get the URLs for each enviroment's frontend, but don't expect these to work until we have deployed our app.  
+
+<br/>
+<br/>
+<p title="Gitops Chills" align="center"> <img width="460" src="https://i.imgur.com/kGQUUTw.jpg"> </p>
 <br/>
 <br/>
 
@@ -583,7 +581,7 @@ If you've done some research into canary deployments with Istio, you'll know tha
 
 These missing resources YAMLs we were talking about: Services, VirtualServices and DestinationRules, they will be automatically created and managed by Flagger.
 
-There's a mystery "canary.yaml" manifest in our [my-app helm charts](helm/my-app/) templates. This is a Flagger CRD. It allows us to define how we want our canary deployments to go down. Flagger will read this manifest and take care of creating the necessary resources and operating them according to what we have defined in this canary.yaml. Let's make a little drawing:
+There's a mystery "canary.yaml" manifest in our [my-app helm charts](helm/my-app/). This is a Flagger CRD. It allows us to define how we want our canary deployments to go down. Flagger will read this manifest and take care of creating the necessary resources and operating them according to what we have defined in this canary.yaml. Let's make a little drawing:
 
 <p title="Flagger diagram" align="center"> <img width="800" src="https://i.imgur.com/HLQ3t5l.jpg"> </p>
 
@@ -594,10 +592,9 @@ The "Primary" resources are the ones that are currently being used and the "Cana
 If the canary is successful, the new version will be migrated from "Canary" to "Primary". In the diagram there's this third service (the one that's not Primary nor Canary) that I'm not sure what purpose it serves. I suspect that it is there so that in case of a successful canary deployment, it will ensure there is no downtime when migrating the resources from Canary to Primary, but I haven't found a straight answer tbh.
 
 You can experience the magic of the canary deployment by, for example, changing the background color of the frontend. Once the canary is running you can hit refresh on your browser often and you'll see how it sometimes sends you to the old version (with the old background color) and sometimes to the new (with the new color), gradually sending you more often to the new version until the old one is gone.<br>
-You can also see this in Kiali. Click on the Graph tab and you'll see a diagram of how the traffic is being routed to each deployment. I encourage you to play with the graph settings.<br>
-Lastly, if interested, you can see the specific metrics inside Grafana. There's a dashboard called "Flagger Canary Status" where you can see the metrics for each deployment and how traffic goes down on primary as is goes up on canary, until the canary is successful an all traffic is moved to the primary (which is now the new version).
+You can also see the specific percentage if you click on the Virtual Service object of the frontend application inside ArgoCD's web UI. Just open it and watch how the spec.http.route.weight's in the live manifest change overtime.  
 
-<p title="Flagger dashboard" align="center"> <img width="800" src="https://i.imgur.com/JMGNhOJ.png"> </p>
+<br/>
 
 ## Other important details
 
@@ -605,9 +602,7 @@ We have not completely ditched our previous way of accessing the cluster through
 
 Also, in [Hardore Edition](https://github.com/tferrari92/automate-all-the-things-hardcore), we had to add TLS encryption to the request from the backend to the ElastiCache DB. This was because we added password protection to the DB, and AWS forces you to use TLS encryption in transit for Elasticache if you want to password protect it. In this case we had to move this TLS origination to the service mesh and remove it form the backend code. Having it in the NodeJS code created a conflict in the communication between the backend container and the envoy container, so we moved it to the service mesh throught the use of a ServiceEntry and a DestinationRule.
 
-Apart from the canary.yaml in our [my-app helm charts](helm/my-app/) templates you will find two new manifests: podmonitor-canary.yaml and podmonitor-canary.yaml. These resources make it possible for Prometheus to scrape metrics from the primary and canary deployments. Why is this necessary? Read the next paragraph... 
-
-Finally, there's another [helm chart for a flagger-loadtester](helm/infra/service-mesh/flagger-loadtester). This is a Flagger tool that will generate requests to our new version (canary deployemt) during the canary excecution. Without this we would have to manually create this traffic for the canary excecution to work properly. The PodMonitors we created will make it possible for Flagger to get metrics generated by these requests from Prometheus and make decisions on how to proceed with the canary. Without requests there's no metrics, and without metrics Flagger cannot make decisions, effectively rendering the canary deployment pointless.
+Finally, there's another [helm chart for a flagger-loadtester](helm/infra/service-mesh/flagger-loadtester). This is a Flagger tool that will generate fake traffic to our services during the canary deployments. Without this we would have to manually create requests to our services during the canary for the canary to work properly. Flagger will read metrics generated by these requests to make decisions on how to proceed with the canary. Without requests there's no metrics, and without metrics Flagger cannot make decisions, effectively rendering the canary pointless.
 
 <br/>
 <br/>
