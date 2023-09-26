@@ -11,13 +11,13 @@ trigger:
 variables:
   - group: aws-keys
   - name: AWS_REGION
-    value: AATT_AWS_REGION # This value was modified by the initial-setup python script
+    value: us-east-2 # This value was modified by the initial-setup python script
   - name: APP_NAME
-    value: AATT_APP_NAME # This value was modified by the initial-setup python script
+    value: alexa # This value was modified by the initial-setup python script
   - name: DOCKERHUB_USERNAME
-    value: AATT_DOCKERHUB_USERNAME # This value was modified by the initial-setup python script
+    value: tferrari92 # This value was modified by the initial-setup python script
   - name: USER_EMAIL
-    value: AATT_USER_EMAIL # This value was modified by the initial-setup python script
+    value: tomas.ferrari@sendati.com # This value was modified by the initial-setup python script
     
 pool:
   vmImage: 'ubuntu-latest' 

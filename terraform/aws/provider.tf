@@ -12,10 +12,10 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "AATT_APP_NAME-tf-state-bucket"          # This value was modified by the initial-setup python script
-    dynamodb_table = "AATT_APP_NAME-tf-state-dynamo-db-table" # This value was modified by the initial-setup python script
+    bucket         = "alexa-tf-state-bucket"          # This value was modified by the initial-setup python script
+    dynamodb_table = "alexa-tf-state-dynamo-db-table" # This value was modified by the initial-setup python script
     key            = "terraform.tfstate"
-    region         = "AATT_AWS_REGION" # This value was modified by the initial-setup python script
+    region         = "us-east-2" # This value was modified by the initial-setup python script
     encrypt        = true
   }
 }

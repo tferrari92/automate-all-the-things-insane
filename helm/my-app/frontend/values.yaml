@@ -1,4 +1,4 @@
-appName: AATT_APP_NAME # This value was modified by the initial-setup python script
+appName: alexa # This value was modified by the initial-setup python script
 
 service: frontend
 
@@ -11,7 +11,7 @@ deployment:
     istio: monitor
   }
   image:
-    repository: AATT_DOCKERHUB_USERNAME/AATT_APP_NAME-frontend # This value was modified by the initial-setup python script
+    repository: tferrari92/alexa-frontend # This value was modified by the initial-setup python script
 
 configmap:
   images: |-
