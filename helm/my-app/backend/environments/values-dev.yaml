@@ -1,10 +1,10 @@
 environment: dev
     
-redis_host: master.mocha-dev-elascache-rep-group.u0khnz.use2.cache.amazonaws.com # This value was modified by the deploy-infra pipeline
+redis_host: # This value was modified by the deploy-infra pipeline
 
 deployment:
   image:  
-    tag: 852
+    tag: 0
   replicas: 1
 
 secret:
