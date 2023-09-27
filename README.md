@@ -393,7 +393,7 @@ pool:
 
 Yes! You're right, we flipped the order of our pipelines in this Insane Edition. This is because we are now using Istio and Flagger. We need the backend and frontend images to be available in the DockerHub registry before deploying their applications. If they don't exist, the canary resources will not deploy properly. Don't worry about it, just carry on with the guide...
 
-Our app is made of two microservices (backend and frontend) and a database. Let's start with the backend (which also includes the db).
+Our app is made of two microservices (backend and frontend) and a database. Let's start with the backend.
 
 The [/my-app/backend directory](my-app/backend) on the repo is meant to represent the backend microservice application code repository. Here you'll find the code files and the corresponding Dockerfile for the backend service.
 
