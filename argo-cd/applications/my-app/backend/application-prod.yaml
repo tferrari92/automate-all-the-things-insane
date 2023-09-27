@@ -15,7 +15,7 @@ spec:
     helm:
       valueFiles:
         - environments/values-prod.yaml
-    repoURL: https://github.com/tomasferrarisenda/automate-all-the-things-insane.git # This value was modified by the initial-setup python script
+    repoURL: https://github.com/AATT_GITHUB_USERNAME/automate-all-the-things-insane.git # This value was modified by the initial-setup python script
   syncPolicy:
     automated:
       prune: true

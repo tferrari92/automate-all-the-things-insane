@@ -1,8 +1,8 @@
-appName: alexa # This value was modified by the initial-setup python script
+appName: AATT_APP_NAME # This value was modified by the initial-setup python script
 
 service: frontend
 
-host: a9155a787f5684a1ca10022dcba4ac18-566383291.us-east-2.elb.amazonaws.com # This value was modified by the deploy-argocd pipeline
+host: # This value was modified by the deploy-argocd pipeline
 
 port: 80
 
@@ -11,7 +11,7 @@ deployment:
     istio: monitor
   }
   image:
-    repository: tferrari92/alexa-frontend # This value was modified by the initial-setup python script
+    repository: AATT_DOCKERHUB_USERNAME/AATT_APP_NAME-frontend # This value was modified by the initial-setup python script
 
 configmap:
   images: |-

@@ -10,7 +10,7 @@ pool:
   #   - agent.name -equals <agent-name> # Insert here the name of the agent you created
 
 variables:
-  AWS_REGION: us-east-2 # This value was modified by the initial-setup python script
+  AWS_REGION: AATT_AWS_REGION  # This value was modified by the initial-setup python script
 
 steps:
 # In this case it's necessary to specify the checkout with the persistCredential options set to true. This will enable us to push the changes to the repo.
