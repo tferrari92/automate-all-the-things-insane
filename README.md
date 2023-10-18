@@ -518,7 +518,7 @@ Another six applications will be under the "my-app" project. These manage our ap
 <br/>
 <br/>
 
-# Kubernetes Tools Management
+# KUBERNETES TOOL MANAGEMENT
 
 ## Description
 
