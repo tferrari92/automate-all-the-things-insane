@@ -78,6 +78,7 @@ This Insane Edition builds upon the [Hardcore Edition](https://github.com/tferra
   - [Description](#description-5)
   - [Instructions](#instructions-5)
 - [Conclusion](#conclusion)
+  - [On the next edition](#on-the-next-edition)
 
 <br/>
 
@@ -669,3 +670,15 @@ Special thanks to all these wonderful YouTube people. This wouldn't have been po
 - [Anton Putra](https://www.youtube.com/@AntonPutra)
 
 ### Happy automating!
+
+<br/>
+
+## On the next edition
+
+[Automate All The Things Braindamage Edition](https://github.com/tferrari92/automate-all-the-things-braindamage):
+
+- ArgoCD Sync Waves
+- Sealed Secrets
+- Backend code instrumented with OpenTelemetry
+- Traces collection and visualization Jaeger
+- Removed the use of Canary deployments in Dev environment
