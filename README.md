@@ -574,7 +574,7 @@ We'll also have Kiali, Istio's native visualization tool to see how our communic
 
 But most importantly, Istio will allow us to implement canary deployments. If you don't know what a canary deployment is, [watch this](https://www.youtube.com/watch?v=AWVTKBUnoIg&ab_channel=ByteByteGo).
 
-Istio uses two CRDs (Custom Resource Definitions) to allow us to do this: Virtual Services and Destination Rules. But if you have taken a look into the [my-app helm charts](helm/my-app/), you may have noticed that not only we don't have a service.yaml for our frontend or backend anymore, there's also no virtual-service.yaml nor destination-rule.yaml. "So how does this work?" you may be asking. Well fear not my friend, that's where Flagger comes in...
+Istio uses two CRDs (Custom Resource Definitions) to allow us to do this: Virtual Services and Destination Rules. But if you have taken a look into the [my-app helm charts](helm/my-app/), you may have noticed that not only we don't have a service.yaml for our frontend or backend anymore, there's also no virtual-service.yaml nor destination-rule.yaml. "So how does this work?" you may be asking. Well fret not my friend, that's where Flagger comes in...
 
 <br/>
 
