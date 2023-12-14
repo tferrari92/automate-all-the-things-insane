@@ -60,7 +60,10 @@ steps:
     kubectl create -n argocd -f $(Agent.BuildDirectory)/s/argo-cd/self-manage/argocd-application.yaml  
 
     # Finally, we create an application that will automatically deploy any ArgoCD Applications we specify in the argo-cd/applications directory.
-    kubectl create -n argocd -f $(Agent.BuildDirectory)/s/argo-cd/self-manage/argocd-apps-application.yaml  
+    kubectl create -n argocd -f $(Agent.BuildDirectory)/s/argo-cd/self-manage/argocd-apps-application.yaml 
+
+    # Get ArgoCD Web UI endpoint.
+    kubectl get ingress -n argocd
   displayName: 'Make ArgoCD self-managed & implemente App of Apps pattern'
 
 - script: |
