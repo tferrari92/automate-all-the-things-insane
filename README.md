@@ -679,8 +679,8 @@ Special thanks to all these wonderful YouTube people. This wouldn't have been po
 
 [Automate All The Things Braindamage Edition](https://github.com/tferrari92/automate-all-the-things-braindamage):
 
-- ArgoCD Sync Waves
-- Sealed Secrets
-- Backend code instrumented with OpenTelemetry
-- Traces collection and visualization Jaeger
-- Removed the use of Canary deployments in Dev environment
+- We'll implement ArgoCD Sync Waves
+- We'll start using Sealed Secrets to safely upload secrets to git
+- We'll instrument the backend service code with OpenTelemetry
+- We'll implement traces collection and visualization Jaeger
+- We'll remove the use of canary deployments in dev environment
