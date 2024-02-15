@@ -5,19 +5,23 @@
 2. Deploy an exporter for the application.
 3. Create a service monitor for the exporter.
 
+
 ## Concepts
 
 ### Exporter
-Prometheus works by pulling (scraping) metrics from monitored targets at regular intervals. It looks for these metrics at an HTTP endpoint which by defaut is <host-address\>/metrics. For this to work, the target must expose metrics in /metrics path and they also have to be in a format that Prometheus understands. Some applications/services do both of these thing by default, but others don't.
+Prometheus works by pulling (scraping) metrics from monitored targets at regular intervals. It looks for these metrics at an HTTP endpoint which by defaut is <host-address\>/metrics. 
+
+For this to work, the target must expose metrics in /metrics path and they also have to be in a format that Prometheus understands. Some applications/services do both of these thing by default, but others don't.
 
 For those applications/services that don't, we have exporters. An exporter is a software that exposes metrics from third-party systems in a format that Prometheus can scrape. They serve as an intermediary between Prometheus and the applications or services that don't natively expose metrics in a format Prometheus understands. They collect metrics from these sources, transform them into the Prometheus data model, and then expose them via an HTTP endpoint at <exporter-host-address\>/metrics.
 
 The kube-prometheus-stack helm chart already comes with some exporters by default, like node-exporter, which exposes metrics from the nodes of out cluster.
 
 In order for the exporter to work we need three things:
-1. A pod (which is the exporter itself)
-2. A service to connect to the exporter pod
+1. A pod (which is the exporter itself).
+2. A service to connect to the exporter pod.
 3. A PodMonitor or ServiceMonitor, which lets Prometheus operator know that there is a new application/service ready to be scraped.
+
 
 ### PodMonitor & ServiceMonitor
 PodMonitor and ServiceMonitor are both custom resource definitions (CRDs) used in the Prometheus Operator. They let the Prometheus operator know that there is a new application/service ready to be scraped.
