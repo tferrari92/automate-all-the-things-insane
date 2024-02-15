@@ -21,20 +21,20 @@ The kube-prometheus-stack helm chart already comes with some exporters by defaul
 In order for the exporter to work we need three things:
 1. A pod (which is the exporter itself).
 2. A service to connect to the exporter pod.
-3. A PodMonitor or ServiceMonitor, which lets Prometheus operator know that there is a new application/service ready to be scraped.
+3. A PodMonitor or ServiceMonitor, which lets Prometheus Operator know that there is a new application/service ready to be scraped.
 </br>
 
 ### PodMonitor & ServiceMonitor
-PodMonitor and ServiceMonitor are both custom resource definitions (CRDs) used in the Prometheus Operator. They let the Prometheus operator know that there is a new application/service ready to be scraped.
+PodMonitor and ServiceMonitor are both custom resource definitions (CRDs) used in the Prometheus Operator. They let the Prometheus Operator know that there is a new application/service ready to be scraped.
 
 Differences:
 - Scope of Monitoring: ServiceMonitor is for services, facilitating the discovery of services and the pods behind them, while PodMonitor is for direct pod monitoring, irrespective of services.
 - Use Cases: ServiceMonitor is ideal when services are the primary abstraction for your applications, and you're interested in metrics at the service level. PodMonitor is better suited for scenarios where direct pod metrics are necessary, such as monitoring specific sidecar containers or jobs without a service.
 
 #### IMPORTANT:
-- By default PodMonitors and ServiceMonitors MUST be created in the same namespace as the Prometheus operator.
-- In our PodMonitors and ServiceMonitors we must include a "release" label. This label allows Prometheus operator to automatically discover the new PodMonitor/ServiceMonitor in the cluster. The value of the "release" label is defined in the Prometheus operator configuration. In our case the value of release must be "kube-prometheus-stack" like [in this manifest](helm/infra/istio-gateway/templates/custom-templates/servicemonitor.yaml).
+- By default PodMonitors and ServiceMonitors MUST be created in the same namespace as the Prometheus Operator.
+- In our PodMonitors and ServiceMonitors we must include a "release" label. This label allows Prometheus Operator to automatically discover the new PodMonitor/ServiceMonitor in the cluster. The value of the "release" label is defined in the Prometheus Operator configuration. In our case the value of release must be "kube-prometheus-stack". Look at [this manifest](helm/infra/istio-gateway/templates/custom-templates/servicemonitor.yaml) for example.
 
 <!-- 
 COMO ESTAMOS JUTNANTO METRICS DE ISTIO O DE MY-APP????? -->
-QUE PODMONIROS Y SERVICEMONITORS CREAMOS Y PORQ????
+<!-- QUE PODMONIROS Y SERVICEMONITORS CREAMOS Y PORQ???? -->
