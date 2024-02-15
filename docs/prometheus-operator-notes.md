@@ -41,6 +41,6 @@ Differences:
 
 Some tools like Flagger have the option to enable monitoring in the chart by default. We enabled Flagger's monitoring through the chart's [values](helm/infra/flagger/values-custom.yaml).
 
-For Istio Gateway, we created a Service that connects to the Istio Gateway Pod and a ServiceMonitor fo this Service. The Istio Gateway pod exports metrics in the stats/prometheus path by default, so we didn't need to create an exporter.
+For Istio Gateway, we created a Service that connects to the Istio Gateway Pod and a ServiceMonitor for this Service. The Istio Gateway Pod exports metrics in the stats/prometheus path by default, so we didn't need to create an exporter.
 
-For the my-app services (backend and frontend), we created a PodMonitor for the Canary pods and another for the Primary pods. Since we are using Istio, the Envoy sidecar container will be the responsible for exposing metrics in the stats/prometheus path, so there was no need to create exporters for these either.
+For the my-app services (backend and frontend), we created a PodMonitor for the Canary pods and another PodMonitor for the Primary pods. Since we are using Istio, the Envoy sidecar container will be the responsible for exposing metrics in the stats/prometheus path, so there was no need to create exporters for these either.
