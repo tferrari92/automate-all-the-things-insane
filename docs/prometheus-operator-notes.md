@@ -5,6 +5,7 @@
 2. Deploy an exporter for the application.
 3. Create a service monitor for the exporter.
 
+</br>
 
 ## Concepts
 
@@ -21,7 +22,7 @@ In order for the exporter to work we need three things:
 1. A pod (which is the exporter itself).
 2. A service to connect to the exporter pod.
 3. A PodMonitor or ServiceMonitor, which lets Prometheus operator know that there is a new application/service ready to be scraped.
-
+</br>
 
 ### PodMonitor & ServiceMonitor
 PodMonitor and ServiceMonitor are both custom resource definitions (CRDs) used in the Prometheus Operator. They let the Prometheus operator know that there is a new application/service ready to be scraped.
