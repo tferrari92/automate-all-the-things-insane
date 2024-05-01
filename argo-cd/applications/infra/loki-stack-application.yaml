@@ -11,7 +11,7 @@ spec:
     server: https://kubernetes.default.svc  
   project: observability
   source:
-    path: helm/infra/observability/loki-stack
+    path: helm/infra/loki-stack
     helm:
       valueFiles:
         - values-custom.yaml

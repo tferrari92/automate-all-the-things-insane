@@ -11,7 +11,7 @@ spec:
     server: https://kubernetes.default.svc  
   project: service-mesh
   source:
-    path: helm/infra/service-mesh/istio-istiod
+    path: helm/infra/istio-istiod
     helm:
       valueFiles:
         - values-custom.yaml

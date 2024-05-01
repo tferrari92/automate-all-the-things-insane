@@ -11,7 +11,7 @@ spec:
     server: https://kubernetes.default.svc  
   project: service-mesh
   source:
-    path: helm/infra/service-mesh/flagger
+    path: helm/infra/flagger
     helm:
       valueFiles:
         - values-custom.yaml

@@ -11,7 +11,7 @@ spec:
     server: https://kubernetes.default.svc  
   project: service-mesh
   source:
-    path: helm/infra/service-mesh/kiali-operator
+    path: helm/infra/kiali-operator
     helm:
       valueFiles:
         - values-custom.yaml

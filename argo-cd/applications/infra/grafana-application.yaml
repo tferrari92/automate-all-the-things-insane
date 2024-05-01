@@ -11,7 +11,7 @@ spec:
     server: https://kubernetes.default.svc  
   project: observability
   source:
-    path: helm/infra/observability/grafana
+    path: helm/infra/grafana
     helm:
       valueFiles:
         - values-custom.yaml
