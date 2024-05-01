@@ -29,6 +29,9 @@ jobs:
           # We delete app of apps application
           kubectl delete -n argocd applications.argoproj.io argocd-app-of-apps
 
+          # We also need to remove the finalizers from the Kiali CR for deletion to be successful, it's a known issue (https://kiali.io/docs/installation/installation-guide/install-with-helm/#known-problem-uninstall-hangs-unable-to-delete-the-kiali-cr)
+          kubectl patch kiali kiali -n service-mesh -p '{"metadata":{"finalizers": []}}' --type=merge
+
           # We delete every other application
           kubectl delete -n argocd applications.argoproj.io --all
 

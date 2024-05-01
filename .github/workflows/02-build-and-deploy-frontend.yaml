@@ -60,18 +60,18 @@ jobs:
           git commit -m "${{ env.SERVICE }} image tag updated to ${{github.run_number}} by GitHub Actions"
           git push
 
-      - name: Configure kubeconfig
-        run: aws eks --region $AWS_REGION update-kubeconfig --name $APP_NAME-cluster
+      # - name: Configure kubeconfig
+      #   run: aws eks --region $AWS_REGION update-kubeconfig --name $APP_NAME-cluster
 
-      - name: Commit changes to GitHub
-        run: |
-          kubectl get ingress -n $APP_NAME-dev $APP_NAME-frontend-dev-ingress -o=jsonpath="{'http://'}{.status.loadBalancer.ingress[].hostname}{'\n'}" > my-app-dev-url.txt
+      # - name: Commit changes to GitHub
+      #   run: |
+      #     kubectl get ingress -n $APP_NAME-dev $APP_NAME-frontend-dev-ingress -o=jsonpath="{'http://'}{.status.loadBalancer.ingress[].hostname}{'\n'}" > my-app-dev-url.txt
 
-      - name: Publish DEV frontend URL
-        uses: actions/upload-artifact@v4
-        with:
-          name: dev-url
-          path: my-app-dev-url.txt
+      # - name: Publish DEV frontend URL
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: dev-url
+      #     path: my-app-dev-url.txt
 
 
   deploy-stage:
@@ -99,18 +99,18 @@ jobs:
           git commit -m "${{ env.SERVICE }} image tag updated to ${{github.run_number}} by GitHub Actions"
           git push
 
-      - name: Configure kubeconfig
-        run: aws eks --region $AWS_REGION update-kubeconfig --name $APP_NAME-cluster
+      # - name: Configure kubeconfig
+      #   run: aws eks --region $AWS_REGION update-kubeconfig --name $APP_NAME-cluster
 
-      - name: Commit changes to GitHub
-        run: |
-          kubectl get ingress -n $APP_NAME-stage $APP_NAME-frontend-stage-ingress -o=jsonpath="{'http://'}{.status.loadBalancer.ingress[].hostname}{'\n'}" > my-app-stage-url.txt
+      # - name: Commit changes to GitHub
+      #   run: |
+      #     kubectl get ingress -n $APP_NAME-stage $APP_NAME-frontend-stage-ingress -o=jsonpath="{'http://'}{.status.loadBalancer.ingress[].hostname}{'\n'}" > my-app-stage-url.txt
 
-      - name: Publish STAGE frontend URL
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-url
-          path: my-app-stage-url.txt
+      # - name: Publish STAGE frontend URL
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: stage-url
+      #     path: my-app-stage-url.txt
 
 
   deploy-prod:
@@ -139,15 +139,15 @@ jobs:
           git commit -m "${{ env.SERVICE }} image tag updated to ${{github.run_number}} by GitHub Actions"
           git push
 
-      - name: Configure kubeconfig
-        run: aws eks --region $AWS_REGION update-kubeconfig --name $APP_NAME-cluster
+      # - name: Configure kubeconfig
+      #   run: aws eks --region $AWS_REGION update-kubeconfig --name $APP_NAME-cluster
 
-      - name: Commit changes to GitHub
-        run: |
-          kubectl get ingress -n $APP_NAME-prod $APP_NAME-frontend-prod-ingress -o=jsonpath="{'http://'}{.status.loadBalancer.ingress[].hostname}{'\n'}" > my-app-prod-url.txt
+      # - name: Commit changes to GitHub
+      #   run: |
+      #     kubectl get ingress -n $APP_NAME-prod $APP_NAME-frontend-prod-ingress -o=jsonpath="{'http://'}{.status.loadBalancer.ingress[].hostname}{'\n'}" > my-app-prod-url.txt
 
-      - name: Publish PROD frontend URL
-        uses: actions/upload-artifact@v4
-        with:
-          name: prod-url
-          path: my-app-prod-url.txt
+      # - name: Publish PROD frontend URL
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: prod-url
+      #     path: my-app-prod-url.txt
