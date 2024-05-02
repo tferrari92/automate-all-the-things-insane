@@ -198,7 +198,7 @@ git commit -m "customized repo"
 git push
 ```
 
-5. Awesome! You can now proceed with the Azure DevOps setup.
+5. Awesome! You can now proceed with the GitHub Actions setup.
 
 <br/>
 <br/>
@@ -206,31 +206,13 @@ git push
 <br/>
 <br/>
 
-# **AZURE DEVOPS SETUP**
+# **GITHUB ACTIONS SETUP**
 
 Before creating our pipelines we need to get a few things set up:<br>
 
-## Create project
-
-1. Sign in [Azure DevOps](https://dev.azure.com/).
-2. Go to "New project" on the top-right.
-3. Write the name for your project and under "Visibility" select "Private".
-4. Click "Create".
-
-<br/>
-
-## Install required plugins
-
-These plugins are required for the pipelines we'll be creating. Click on "Get it free", select your organization and then click "Install".
-
-1. Install [Terraform Tasks plugin](https://marketplace.visualstudio.com/items?itemName=JasonBJohnson.azure-pipelines-tasks-terraform) for Azure Pipelines
-1. Install [AWS Toolkit plugin](https://marketplace.visualstudio.com/items?itemName=AmazonWebServices.aws-vsts-tools) for Azure Pipelines
-
-<br/>
-
 ## Get your AWS keys
 
-These will be required for Azure DevOps to connect to your AWS account.
+These will be required for our workflows to connect to your AWS account.
 
 1. Open the IAM console at https://console.aws.amazon.com/iam/.
 2. On the search bar look up "IAM".
@@ -246,65 +228,19 @@ These will be required for Azure DevOps to connect to your AWS account.
 
 <br/>
 
-## Create AWS service connection
+## Create secrets for GitHub Actions
 
-This service connection is required for our Azure DevOps pipelines to interact with AWS.
+1. Go to the Settings tab of your GitHub repo.
+2. On the left-side menu click "Secrets and variables" and then on "Actions".
+3. Under "Repository secrets" click on "New repository secret".
+<p title="Guide" align="center"> <img width="700" src="https://i.imgur.com/656voMj.png"> </p>
 
-1. Go back to Azure DevOps and open your project.
-2. Go to Project settings on the left side menu (bottom-left corner).
-3. On the left side menu, under "Pipelines", select "Service connections".
-4. Click on "Create service connection".
-5. Select AWS, click "Next".
-6. Paste your Access Key ID and Secret Access Key.
-7. Under "Service connection name", write "aws".
-8. Select the "Grant access permission to all pipelines" option.
-9. Save.
-
-<br/>
-
-## Create DockerHub service connection
-
-This service connection is required for our Azure DevOps pipelines to be able to push images to your DockerHub registry.
-
-1. While on the "Service connections" screen, click on "New service connection" on the top-right.
-2. Select "Docker Registry", click "Next".
-3. Under "Registry type" select "Docker Hub".
-4. Input your Docker ID and Password.
-5. Under "Service connection name", write "dockerhub".
-6. Select the "Grant access permission to all pipelines" option.
-7. Click on "Verify and save".
-
-<br/>
-
-## Create AWS keys variable group
-
-These are needed for Terraform to be able to deploy our AWS infrastructure.
-
-1. On the left side menu under "Pipelines" go to "Library"
-2. Click on "+ Variable group".
-3. Under "Variable group name" write "aws-keys".
-4. Add the following variables pasting on the "Value" field your AWS keys:
-
-- aws_access_key_id
-- aws_secret_access_key
-
-5. Click on the lock icon on each variable.
-6. Click on "Save".
-7. Click on "Pipeline permissions" and give it "Open access". This means all our pipelines will be able to use these variables.
-<p title="Guide" align="center"> <img width="700" src="https://i.imgur.com/aMzTx49.jpg"> </p>
-
-<br/>
-
-## (Optional) Create an Azure self-hosted agent
-
-**If you have a hosted parallelism, you can skip this step.**<br/>
-
-A hosted parallelism basically means that Azure will spin up a server in which to run your pipelines. You can purchase one or you can request a free parallelism by filling out [this form](https://aka.ms/azpipelines-parallelism-request).
-
-If you don't have a hosted parallelism, you will have to run the pipeline in a **self-hosted agent**.
-This means you'll install an Azure DevOps Agent on your local machine, which will receive and execute the pipeline jobs.
-
-To install a self-hosted agent on your machine, you can follow the official documentation [here](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser#install).
+4. Under "Name" write "AWS_ACCESS_KEY_ID" and under "Secret" paste the corresponding value. 
+5. Click "Add secret" to save.
+6. Repeat the process for:
+- AWS_SECRET_ACCESS_KEY
+- DOCKER_USERNAME
+- DOCKER_PASSWORD
 
 <br/>
 <br/>
@@ -323,7 +259,7 @@ To install a self-hosted agent on your machine, you can follow the official docu
 
 Our first pipeline, the one that will provide us with all the necessary infrastructure.
 
-What does this pipeline do? If you take a look at the [00-deploy-infra.yml](azure-devops/00-deploy-infra.yml) file, you'll see that the first thing we do is use the Terraform plugin we previously installed to deploy a S3 Bucket and DynamoDB table. These two resources will allow us to store our terraform state remotely and give it locking functionality.<br/>
+What does this pipeline do? If you take a look at the [00-deploy-infra.yaml](/.github/workflows/00-deploy-infra.yaml) file, you'll see that the first thing we do is use the Terraform plugin we previously installed to deploy a S3 Bucket and DynamoDB table. These two resources will allow us to store our terraform state remotely and give it locking functionality.<br/>
 
 Why do we need to store our tf state remotely and locking it? Well, this is probably not necessary for this exercise but it's a best practice when working on a team.<br>
 Storing it remotely means that everyone on the team can access and work with the same state file, and locking it means that only one person can access it at a time, this prevents state conflicts.
@@ -360,29 +296,10 @@ Oh and lastly... it will export an artifact with the instructions on how to conn
 
 ## Instructions
 
-1. On your Azure DevOps project, go to "Pipelines" on the left side menu.
-2. Select "Pipelines" under "Pipelines" on the left side menu.
-3. Click on "Create Pipeline".
-4. Select "Github".
-5. You might get a screen to authorize Azure Pipelines to access your GitHub account, if so, go ahead and click the green button.
-6. Select the repo, it should be "your-github-username/automate-all-the-things-insane"
-7. You might also get a screen to install the Azure Pipelines App on your GitHub account, if so, go ahead and click the green button and follow the instructions.
-8. Select "Existing Azure Pipelines YAML file".
-9. Under "Branch" select "main" and under "Path" select "/azure-devops/00-deploy-infra.yml". Click "Continue".
-10. _If you have hosted parallelism skip to point 11_. **If you DON'T have a hosted parallelism**, you need to tell Azure DevOps to use your [**self-hosted agent**](#optional-create-an-azure-self-hosted-agent). In order to do this, you'll need to go to the repo and modify the [00-deploy-infra.yml file](azure-devops/00-deploy-infra.yml).<br>
-    Under "pool" you need to edit it so that it looks like this:
-
-```yaml
-pool:
-  # vmImage: 'ubuntu-latest'
-  name: <agent-pool-name> # Insert here the name of the agent pool you created
-  demands:
-    - agent.name -equals <agent-name> # Insert here the name of the agent you created
-```
-
-11. Click on "Run".
-12. When it's done, the EC2 instance public IP address will be exported as an artifact. You'll find it in the pipeline run screen. Download it to see the instructions to access the instance.
-<p title="Guide" align="center"> <img width="700" src="https://i.imgur.com/UtZyCCe.png"> </p>
+1. On your GitHub repo, go to the "Actions" tab.
+2. Click on the "00-Deploy AWS infrastructure" workflow.
+3. Click on "Run workflow" (Use workflow from Branch: main).
+4. When it's finished, the EC2 instance public IP address will be exported as an artifact. You'll find it in the workflow run screen under "Artifacts". Download it to see the instructions to access the instance.
 
 <br/>
 <br/>
@@ -421,14 +338,9 @@ Now, if the infrastrucure team needs to make changes to the cluster resources, t
 
 ## Instructions
 
-1. Go to "Pipelines" under "Pipelines" on the left side menu.
-2. Click on "New pipeline".
-3. Select "GitHub".
-4. Select the repo, it should be "your-github-username/automate-all-the-things-insane"
-5. Select "Existing Azure Pipelines YAML file".
-6. Under "Branch" select "main" and under "Path" select "/azure-devops/01-build-and-deploy-backend.yml". Click "Continue".
-7. If you DON'T have a hosted parallelism, you'll need to do the same thing as in point 10 from the [infrastructure deployment pipeline](#instructions).
-8. Click on "Run".
+1. On your GitHub repo, go to the "Actions" tab.
+2. Click on the "01-Build & deploy my-app-backend image" workflow.
+3. Click on "Run workflow" (Use workflow from Branch: main).
 
 <br/>
 <br/>
@@ -457,19 +369,14 @@ For the infrastructure, same as before. If the infrastrucure team needs to, for 
 
 ## Instructions
 
-1. Go to "Pipelines" under "Pipelines" on the left side menu.
-2. Click on "New pipeline".
-3. Select "GitHub".
-4. Select the repo, it should be "your-github-username/automate-all-the-things-insane"
-5. Select "Existing Azure Pipelines YAML file".
-6. Under "Branch" select "main" and under "Path" select "/azure-devops/02-build-and-deploy-frontend.yml". Click "Continue".
-7. If you DON'T have a hosted parallelism, you'll need to do the same thing as in point 10 from the [infrastructure deployment pipeline](#instructions).
-8. Click on "Run".
-
-<!-- 9. When it's done, you should be able to access the URLs you got from the ArgoCD Deployment pipeline. But if you go to the URLs too quickly you'll see nothing there. We need to give ArgoCD a little time to notice the changes in the [/helm/my-app/frontend directory](helm/my-app/frontend). By default ArgoCD pulls for changes every three minutes. You can either wait like an adult or go into the ArgoCD web UI and hit "Refresh Apps" like the impatient child that you are.
-11. Check the URLs again.
-12. On the top left of the website you'll see the "Visit count". This number is being stored in the ElatiCache DB and accessed through the backend.
-13. Hope you like the web I made for you. If you did, go leave a star on [my repo](https://github.com/tferrari92/automate-all-the-things-insane). -->
+1. On your GitHub repo, go to the "Actions" tab.
+2. Click on the "02-Build & deploy my-app-frontend image" workflow.
+3. Click on "Run workflow" (Use workflow from Branch: main).
+<!-- 4. When it's finished, you'll find three artifacts with the URLs for each environment's frontend in the workflow run screen under "Artifacts". Download them to see the URLs.
+5. If you go to the URLs too quickly you will get a "503 Service Temporarily Unavailable". We need to give ArgoCD a little time to notice the changes in the [/helm/my-app/frontend directory](helm/my-app/frontend). By default ArgoCD pulls for changes every three minutes. You can either wait like an adult or go into the ArgoCD web UI and hit "Refresh Apps" like the impatient child that you are.
+6. Check the URLs again.
+7. On the top left of the website you'll see the "Visit count". This number is being stored in the ElatiCache DB and accessed through the backend.
+8. That's it! Hope you like the web I made for you. If you did, go leave a star on [my repo](https://github.com/tferrari92/automate-all-the-things). -->
 
 <br/>
 <br/>
@@ -498,18 +405,11 @@ Finally the pipeline will get the ArgoCD web UI URL and admin account password a
 
 ## Instructions
 
-1. Go to "Pipelines" under "Pipelines" on the left side menu.
-2. Click on "New pipeline".
-3. Select "GitHub".
-4. Select the repo, it should be "your-github-username/automate-all-the-things-insane"
-5. Select "Existing Azure Pipelines YAML file".
-6. Under "Branch" select "main" and under "Path" select "/azure-devops/03-deploy-argocd.yml". Click "Continue".
-7. If you DON'T have a hosted parallelism, you'll need to do the same thing as in point 10 from the [infrastructure deployment pipeline](#instructions).
-8. Click on "Run".
-9. When it's done, the endpoints and ArgoCD access files will be exported as artifacts. You'll find them in the pipeline run screen. Download them to see the ArgoCD URL and credentials, and the frontend endpoints.
-<p title="Guide" align="center"> <img width="700" src="https://i.imgur.com/UtZyCCe.png"> </p>
-
-10. You can now access the ArgoCD UI, if it's not ready just hit refresh every few seconds. Here you should find all the applications. Some may still be progressing, be patient.<br>
+1. On your GitHub repo, go to the "Actions" tab.
+2. Click on the "03-Deploy ArgoCD" workflow.
+3. Click on "Run workflow" (Use workflow from Branch: main).
+4. When it's finished, the access file will be exported as an artifact. You'll find it in the workflow run screen under "Artifacts". Download it to see the URL and credentials.
+5. You can now access the ArgoCD UI, if it's not ready just hit refresh every few seconds. Here you should find all the applications. Some may still be progressing, be patient.<br>
 Three applications will be under the "argocd" project, these are necessary for ArgoCD self-management.<br>
 Another three will be under the "observability" project, these are Prometheus, Loki and Grafana.<br>
 You will also see a few other applications related to our new service mesh implementation, they will be under the "service-mesh" project. We'll explore these later.<br>
@@ -629,15 +529,10 @@ The pipeline will finish with a warning, worry not, this is because the "terrafo
 
 ## Instructions
 
-1. Go to "Pipelines" under "Pipelines" on the left side menu.
-2. Click on "New pipeline".
-3. Select "GitHub".
-4. Select the repo, it should be "your-github-username/automate-all-the-things-insane"
-5. Select "Existing Azure Pipelines YAML file".
-6. Under "Branch" select "main" and under "Path" select "/azure-devops/04-destroy-all-the-things.yml". Click "Continue".
-7. If you DON'T have a hosted parallelism, you'll need to do the same thing as in point 10 from the [infrastructure deployment pipeline](#instructions).
-8. Click on "Run".
-9. There's two AWS resources that for some reason don't get destroyed: a DHCP Option Set and an Auto Scaling Managed Rule. I'm pretty sure these don't generate any expenses but you can go and delete them manually just in case. I'm really sorry about this... I have brought [shame](https://i.imgur.com/PIm1apF.gifv) upon my family...
+1. On your GitHub repo, go to the "Actions" tab.
+2. Click on the "04-Destroy infrastructure" workflow.
+3. Click on "Run workflow" (Use workflow from Branch: main).
+4. There's two AWS resources that for some reason don't get destroyed: a DHCP Option Set and an Auto Scaling Managed Rule. I'm pretty sure these don't generate any expenses but you can go and delete them manually just in case. I'm really sorry about this... I have brought [shame](https://i.imgur.com/PIm1apF.gifv) upon my family...
 
 <br/>
 <br/>
