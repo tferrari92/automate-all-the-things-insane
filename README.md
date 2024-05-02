@@ -54,14 +54,9 @@ This Insane Edition builds upon the [Hardcore Edition](https://github.com/tferra
   - [Tools we'll be using](#tools-well-be-using)
   - [Disclaimer](#disclaimer)
 - [Local Setup](#local-setup)
-- [Azure DevOps Setup](#azure-devops-setup)
-  - [Create project](#create-project)
-  - [Install required plugins](#install-required-plugins)
+- [GitHub Actions Setup](#github-actions-setup)
   - [Get your AWS keys](#get-your-aws-keys)
-  - [Create AWS service connection](#create-aws-service-connection)
-  - [Create DockerHub service connection](#create-dockerhub-service-connection)
-  - [Create AWS-keys variable group](#create-aws-keys-variable-group)
-  - [Create an Azure self-hosted agent](#optional-create-an-azure-self-hosted-agent)
+  - [Create secrets for GitHub Actions](#create-secrets-for-github-actions)
 - [AWS Infrastructure Deployment Pipeline](#aws-infrastructure-deployment-pipeline)
   - [Description](#description)
   - [Instructions](#instructions)
@@ -107,7 +102,6 @@ Here's my attempt at making the world a better place. People in the future will 
 - [Active GitHub account](https://github.com/)
 - [Active DockerHub account](https://hub.docker.com/)
 - [Active AWS account](https://aws.amazon.com/)
-- [Active Azure DevOps account](https://azure.microsoft.com/en-us/free/)
 
 <br/>
 
@@ -137,7 +131,7 @@ Our app is a very simple static website, but I'm not spoiling it for you. You'll
 - Infrastructure as Code -> Terraform
 - Containerization -> Docker
 - Container Orchestration -> Kubernetes
-- Continuous Integration -> Azure DevOps
+- Continuous Integration -> GitHub Actions
 - Continuous Deployment -> Helm & ArgoCD
 - Scripting -> Python
 - Monitoring -> Prometheus
@@ -154,7 +148,7 @@ Our app is a very simple static website, but I'm not spoiling it for you. You'll
 
 ## Disclaimer
 
-This is not a free project, it will cost you between $1 US dollars and $10 depending on how long you run the resources for. That's assuming you run them for a few hours tops, not days. Always remember to run the [destroy-all-the-things pipeline](/azure-devops/04-destroy-all-the-things.yml) when you are done.
+This is not a free project, it will cost you between $1 US dollars and $10 depending on how long you run the resources for. That's assuming you run them for a few hours tops, not days. Always remember to run the [destroy-all-the-things pipeline](/.github/workflows/04-destroy-all-the-things.yml) when you are done.
 
 Some things could have been further automated but I prioritized modularization and separation of concerns.<br>
 
