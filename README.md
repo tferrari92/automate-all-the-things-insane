@@ -573,7 +573,7 @@ Special thanks to all these wonderful YouTube people. This wouldn't have been po
 
 ## On the next edition
 
-[Automate All The Things Braindamage Edition](https://github.com/tferrari92/automate-all-the-things-braindamage):
+[Automate All The Things Overload Edition](https://github.com/tferrari92/automate-all-the-things-overload):
 
 - We'll implement ArgoCD Sync Waves
 - We'll start using Sealed Secrets to safely upload secrets to git
