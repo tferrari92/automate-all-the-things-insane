@@ -33,8 +33,6 @@ This Insane Edition builds upon the [Hardcore Edition](https://github.com/tferra
 - Service mesh visualization with Kiali
 
 ### Versions in order of complexity:
-
-### Versions in order of complexity:
 1. [Regular Edition](https://github.com/tferrari92/automate-all-the-things)
 2. [Hardcore Edition](https://github.com/tferrari92/automate-all-the-things-hardcore)
 3. [Insane Edition](https://github.com/tferrari92/automate-all-the-things-insane)
