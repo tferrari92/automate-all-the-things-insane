@@ -579,5 +579,5 @@ Special thanks to all these wonderful YouTube people. This wouldn't have been po
 - We'll implement ArgoCD Sync Waves
 - We'll start using Sealed Secrets to safely upload secrets to git
 - We'll instrument the backend service code with OpenTelemetry
-- We'll implement traces collection and visualization Jaeger
+- We'll implement traces collection and visualization with Jaeger
 - We'll remove the use of canary deployments in dev environment
