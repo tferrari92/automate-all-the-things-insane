@@ -41,6 +41,7 @@ This Insane Edition builds upon the [Hardcore Edition](https://github.com/tferra
 5. [Braindamage Edition](https://github.com/tferrari92/automate-all-the-things-braindamage)
 6. [Transcendence Edition](https://github.com/tferrari92/automate-all-the-things-transcendence)
 7. [Nirvana Edition](https://github.com/tferrari92/automate-all-the-things-nirvana)
+8. [Almighty Edition](https://github.com/tferrari92/automate-all-the-things-almighty)
 
 ### Spin-offs:
 - [Backstage Minikube Lab](https://github.com/tferrari92/backstage-minikube-lab)
